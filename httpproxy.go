@@ -73,10 +73,6 @@ func NewMultiHTTPProxy(localURLMap map[string]*url.URL, logger log.Logger) *HTTP
 
 // Proxy is a ProxyFunc.
 func (p *HTTPProxy) Proxy(w io.Writer, r io.ReadCloser, msg *proto.ControlMessage) {
-	if msg.Protocol != proto.HTTP {
-		panic(fmt.Sprintf("Expected proxy protocol, got %s", msg.Protocol))
-	}
-
 	rw, ok := w.(http.ResponseWriter)
 	if !ok {
 		panic(fmt.Sprintf("Expected http.ResponseWriter got %T", w))
@@ -85,7 +81,7 @@ func (p *HTTPProxy) Proxy(w io.Writer, r io.ReadCloser, msg *proto.ControlMessag
 	req, err := http.ReadRequest(bufio.NewReader(r))
 	if err != nil {
 		p.logger.Log(
-			"level", 1,
+			"level", 0,
 			"msg", "failed to read request",
 			"err", err,
 		)
